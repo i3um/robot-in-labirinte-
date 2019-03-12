@@ -1,22 +1,25 @@
 #include <Servo.h>
 #include <NewPing.h>
 #define ENA 3
-#define IN1 8  
-#define IN2 7 
-#define IN3 12 
+#define IN1 8
+#define IN2 7
+#define IN3 12
 #define IN4 13
 #define ENB 11
-#define ECHO_PIN 4
-#define TRIGGER_PIN 2
+#define ECHO_PIN 2
+#define TRIGGER_PIN 4
 #define MAX_DISTANCE 400
-NewPing sonar(TRIGGER_PIN, ECHO_PIN, MAX_DISTANCE);  
+NewPing sonar(TRIGGER_PIN, ECHO_PIN, MAX_DISTANCE);
 Servo Vertical;
 Servo Gorizontal;
- 
+
 void setup()
-{ 
-  Gorizontal.write(100);
-  Vertical.write(17);
+{
+  Vertical.attach(9);
+  Gorizontal.attach(10);
+
+  Gorizontal.write(85);
+  Vertical.write(10);
   Serial.begin(9600);
   pinMode(ENA, OUTPUT);
   pinMode(IN1, OUTPUT);
@@ -24,10 +27,8 @@ void setup()
   pinMode(IN3, OUTPUT);
   pinMode(IN4, OUTPUT);
   pinMode(ENB, OUTPUT);
-  pinMode(ECHO_PIN, OUTPUT);
-  pinMode(TRIGGER_PIN, OUTPUT);
- Vertical.attach(9);
- Gorizontal.attach(10);   
+
+
 }
 
 
@@ -35,22 +36,87 @@ void setup()
 
 void loop()
 {
- delay(200);
- Serial.print("Ping: ");
+
+  //delay(500);
+
+  Serial.print("Ping: ");
   Serial.print(sonar.ping_cm());
   Serial.println("cm");
-   
-  
+
+
   analogWrite(ENA , 255);
- analogWrite(ENB , 255);
-
- 
- digitalWrite(IN4, HIGH); 
- digitalWrite(IN3, LOW);
- digitalWrite(IN2, LOW);
- digitalWrite(IN1, HIGH);
+  analogWrite(ENB , 255);
 
 
+  digitalWrite(IN4, HIGH);
+  digitalWrite(IN3, LOW);
+  digitalWrite(IN2, LOW);
+  digitalWrite(IN1, HIGH);
 
- 
+
+  int distance = sonar.ping_cm();
+  if ((distance <  25) && (distance > 0)) {
+    digitalWrite(IN4, LOW);
+    digitalWrite(IN3, LOW);
+    digitalWrite(IN2, LOW);
+    digitalWrite(IN1, LOW);
+
+
+    Gorizontal.write(10); //направо по деофлту 1000
+    delay(1000);
+
+    int rightdistance = sonar.ping_cm();
+
+    Gorizontal.write(175);
+    delay(1900);  // налево по дефолту 2000
+
+
+
+    int leftDistance = sonar.ping_cm();
+
+    Gorizontal.write(90);
+    delay(900);
+
+
+    if (rightdistance > leftDistance) { //направо 
+      digitalWrite(IN4, LOW);
+      digitalWrite(IN3, HIGH);
+      digitalWrite(IN2, LOW);
+      digitalWrite(IN1, HIGH);
+      analogWrite(ENA, 255);
+      analogWrite(ENB, 255);
+      delay(235);
+
+      digitalWrite(IN4, LOW);
+      digitalWrite(IN3, LOW);
+      digitalWrite(IN2, LOW);
+      digitalWrite(IN1, LOW);
+
+      
+    }
+
+    else  {
+      digitalWrite(IN4, HIGH);  //налево
+      digitalWrite(IN3, LOW);
+      digitalWrite(IN2, HIGH);
+      digitalWrite(IN1, LOW);
+
+      delay(250);
+    }
+
+    digitalWrite(IN4, LOW);
+    digitalWrite(IN3, LOW);
+    digitalWrite(IN2, LOW);
+    digitalWrite(IN1, LOW);
+
+
+
+  }
+
+
+
+
+
+
+
 }
