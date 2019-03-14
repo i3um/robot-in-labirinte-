@@ -63,19 +63,19 @@ void loop()
 
 
     Gorizontal.write(10); //направо по деофлту 1000
-    delay(1000);
+    delay(650);
 
     int rightdistance = sonar.ping_cm();
 
     Gorizontal.write(175);
-    delay(1900);  // налево по дефолту 2000
+    delay(1000);  // налево по дефолту 2000
 
 
 
     int leftDistance = sonar.ping_cm();
 
     Gorizontal.write(90);
-    delay(900);
+    delay(1000);
 
 
     if (rightdistance > leftDistance) { //направо 
@@ -85,7 +85,7 @@ void loop()
       digitalWrite(IN1, HIGH);
       analogWrite(ENA, 255);
       analogWrite(ENB, 255);
-      delay(235);
+      delay(215);
 
       digitalWrite(IN4, LOW);
       digitalWrite(IN3, LOW);
@@ -101,7 +101,7 @@ void loop()
       digitalWrite(IN2, HIGH);
       digitalWrite(IN1, LOW);
 
-      delay(250);
+      delay(220);
     }
 
     digitalWrite(IN4, LOW);
@@ -120,3 +120,16 @@ void loop()
 
 
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
